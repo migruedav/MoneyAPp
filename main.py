@@ -93,10 +93,10 @@ async def gastado():
     subs=[]
     for i in subcategorias:
         subs.append(i['subcategoria'])
-
-    for sub in subs:
-        total = sum([m['monto'] for m in movimientos if (m['tipo']=='Egreso')and (m['subcategoria']==sub)])
-        for s in subcategorias:
-            db.collection('subcategoriasEgresos').document(s['doc_id']).set({'gastado':total},merge=True)
     
-    return f"Monto gastado de {sub} actualizado"
+    for s in subcategorias:
+        total = sum([m['monto'] for m in movimientos if (m['tipo']=='Egreso')and (m['subcategoria']==subs[0])])
+        db.collection('subcategoriasEgresos').document(s['doc_id']).set({'gastado':total},merge=True)
+        subs.pop(0)
+    
+    return f"Gastado actualizado"
