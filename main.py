@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi import Query
 import firebase_admin
 from firebase_admin import firestore
 from firebase_admin import credentials
@@ -63,3 +64,36 @@ async def home():
     db.collection('home').document('d7x71RhHQede3VxMuMgN').set({'TotalIngresos':TotalIngresos,'TotalEgresos':TotalEgresos,'GranTotal':GranTotal}, merge=True)
 
     return "Datos del Home actualizados"
+
+
+@app.get("/gastado")
+async def gastado(sub:str = Query()):
+    movimientos = []
+    docs = db.collection(u'movimientos').stream()
+
+    for i in docs:
+        movimiento = {'doc_id':''}
+        movimiento['doc_id']=i.id
+        
+        for k,v in i.to_dict().items():
+            movimiento[k]=v
+        movimientos.append(movimiento)
+
+    subcategorias = []
+    docs = db.collection(u'subcategoriasEgresos').stream()
+
+    for i in docs:
+        movimiento = {'doc_id':''}
+        movimiento['doc_id']=i.id
+        
+        for k,v in i.to_dict().items():
+            movimiento[k]=v
+        subcategorias.append(movimiento)
+
+    total = sum([m['monto'] for m in movimientos if (m['tipo']=='Egreso')and (m['subcategoria']==sub)])
+
+    for s in subcategorias:
+        if s['subcategoria']==sub:
+            db.collection('subcategoriasEgresos').document(s['doc_id']).set({'gastado':total},merge=True)
+    
+    return f"Monto gastado de {sub} actualizado"
