@@ -67,7 +67,7 @@ async def home():
 
 
 @app.get("/gastado")
-async def gastado(sub:str = Query()):
+async def gastado():
     movimientos = []
     docs = db.collection(u'movimientos').stream()
 
@@ -89,11 +89,14 @@ async def gastado(sub:str = Query()):
         for k,v in i.to_dict().items():
             movimiento[k]=v
         subcategorias.append(movimiento)
+    
+    subs=[]
+    for i in subcategorias:
+        subs.append(i['subcategoria'])
 
-    total = sum([m['monto'] for m in movimientos if (m['tipo']=='Egreso')and (m['subcategoria']==sub)])
-
-    for s in subcategorias:
-        if s['subcategoria']==sub:
+    for sub in subs:
+        total = sum([m['monto'] for m in movimientos if (m['tipo']=='Egreso')and (m['subcategoria']==sub)])
+        for s in subcategorias:
             db.collection('subcategoriasEgresos').document(s['doc_id']).set({'gastado':total},merge=True)
     
     return f"Monto gastado de {sub} actualizado"
