@@ -1,8 +1,10 @@
+
+*.ipynb
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-
+moneyapp-f3a82-firebase-adminsdk-cuo23-94ccf78707.json
 # C extensions
 *.so
 

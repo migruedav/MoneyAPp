@@ -4,7 +4,7 @@ import firebase_admin
 from firebase_admin import firestore
 from firebase_admin import credentials
 
-cred = credentials.Certificate("/Users/mac/Code/MoneyApp/moneyapp-f3a82-firebase-adminsdk-cuo23-94ccf78707.json")
+cred = credentials.Certificate(config)
 try:
     firebase_admin.initialize_app(cred)
 except:
