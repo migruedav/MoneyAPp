@@ -52,14 +52,14 @@ async def home():
 
     TotalPorCuenta ={}
     for k,v in cuentas.items():
-        total = (sum([i['monto'] for i in movimientos if ('cuenta' in i)and(i['tipo']=='Ingreso')and(i['cuenta']==v)]))-(sum([i['monto'] for i in movimientos if ('cuenta' in i)and(i['tipo']=='Egreso')and(i['cuenta']==v)]))+(sum([i['monto'] for i in movimientos if ('transcuentaingreso' in i)and(i['transcuentaingreso']==v)]))-(sum([i['monto'] for i in movimientos if ('transcuentaegreso' in i)and(i['transcuentaegreso']==v)]))
+        total = (sum([i['monto'] for i in movimientos if (i['tipo']=='Ingreso')and(i['cuenta']==v)]))-(sum([i['monto'] for i in movimientos if (i['tipo']=='Egreso')and(i['cuenta']==v)]))+(sum([i['monto'] for i in movimientos if ('transcuentaingreso' in i)and(i['transcuentaingreso']==v)]))-(sum([i['monto'] for i in movimientos if ('transcuentaegreso' in i)and(i['transcuentaegreso']==v)]))
         TotalPorCuenta[k]=total
 
-    TotalIngresos=sum([i['monto'] for i in movimientos if i['tipo']=='Ingreso'])
-    TotalEgresos=sum([i['monto'] for i in movimientos if i['tipo']=='Egreso'])
+    TotalIngresos=sum([i['monto'] for i in movimientos if (i['tipo']=='Ingreso') and (i['subcategoria']!='Transferencia')])
+    TotalEgresos=sum([i['monto'] for i in movimientos if (i['tipo']=='Egreso') and (i['subcategoria']!='Transferencia')])
     GranTotal = TotalIngresos-TotalEgresos    
 
     db.collection('home').document('d7x71RhHQede3VxMuMgN').set(TotalPorCuenta)
     db.collection('home').document('d7x71RhHQede3VxMuMgN').set({'TotalIngresos':TotalIngresos,'TotalEgresos':TotalEgresos,'GranTotal':GranTotal}, merge=True)
 
-    return "datos del home actualizados"
+    return "Datos del Home actualizados"
