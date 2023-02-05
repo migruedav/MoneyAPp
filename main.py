@@ -102,7 +102,7 @@ async def gastado():
     return f"Gastado actualizado"
 
 @app.get("/mensualidad")
-async def gastado(nombre:str = Query(), mesdemensualidad:str = Query()):
+async def mensualidad(nombre:str = Query(), mesdemensualidad:str = Query()):
     docs = db.collection(u'alumnos').stream()
     alumnos = []
 
