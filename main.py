@@ -34,7 +34,7 @@ class Msg(BaseModel):
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World. Welcome to FastAPI!"}
+    return "FastAPI MoneyApp"
 
 
 @app.get("/home")
@@ -114,11 +114,10 @@ async def gastado(nombre:str = Query(), mesdemensualidad:str = Query()):
             alumno[k]=v
         alumnos.append(alumno)
 
-        for i in alumnos:
-            if nombre == i['nombre']:
-                listamensualidades = i['mensualidades']
-                listamensualidades.append(mesdemensualidad)
-        
-        db.collection('alumnos').document(i['doc_id']).set({'mensualidades':listamensualidades}, merge=True)
+    for i in alumnos:
+        if i['nombre']==nombre:
+            listamensualidades = i['mensualidades']
+            listamensualidades.append(mesdemensualidad)
+            db.collection('alumnos').document(i['doc_id']).set({'mensualidades':listamensualidades}, merge=True)
     
     return f"Mensualidad de {mesdemensualidad} añadida a {nombre}"
