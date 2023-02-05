@@ -100,3 +100,24 @@ async def gastado():
         subs.pop(0)
     
     return f"Gastado actualizado"
+
+@app.get("/mensualidad")
+async def gastado(nombre:str = Query(), mesdemensualidad:str = Query()):
+    docs = db.collection(u'alumnos').stream()
+    alumnos = []
+
+    for i in docs:
+        alumno = {'doc_id':''}
+        alumno['doc_id']=i.id
+        
+        for k,v in i.to_dict().items():
+            alumno[k]=v
+        alumnos.append(alumno)
+
+        for i in alumnos:
+            if nombre == i['nombre']:
+                listamensualidades = i['mensualidades']
+                listamensualidades.append(mesdemensualidad)
+                db.collection('alumnos').document(i['doc_id']).set({'mensualidades':listamensualidades}, merge=True)
+    
+    return "Mensualidad de {mesdemensualidad} añadida a {nombre}"
