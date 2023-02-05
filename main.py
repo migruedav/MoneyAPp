@@ -120,4 +120,4 @@ async def gastado(nombre:str = Query(), mesdemensualidad:str = Query()):
                 listamensualidades.append(mesdemensualidad)
                 db.collection('alumnos').document(i['doc_id']).set({'mensualidades':listamensualidades}, merge=True)
     
-    return "Mensualidad de {mesdemensualidad} añadida a {nombre}"
+    return f"Mensualidad de {mesdemensualidad} añadida a {nombre}"
