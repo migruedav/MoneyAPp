@@ -101,6 +101,41 @@ async def gastado():
     
     return f"Gastado actualizado"
 
+@app.get("/ingresado")
+async def ingresado():
+    movimientos = []
+    docs = db.collection(u'movimientos').stream()
+
+    for i in docs:
+        movimiento = {'doc_id':''}
+        movimiento['doc_id']=i.id
+        
+        for k,v in i.to_dict().items():
+            movimiento[k]=v
+        movimientos.append(movimiento)
+
+    subcategorias = []
+    docs = db.collection(u'subcategoriasIngresos').stream()
+
+    for i in docs:
+        movimiento = {'doc_id':''}
+        movimiento['doc_id']=i.id
+        
+        for k,v in i.to_dict().items():
+            movimiento[k]=v
+        subcategorias.append(movimiento)
+    
+    subs=[]
+    for i in subcategorias:
+        subs.append(i['subcategoria'])
+    
+    for s in subcategorias:
+        total = sum([m['monto'] for m in movimientos if (m['tipo']=='Ingreso')and (m['subcategoria']==subs[0])])
+        db.collection('subcategoriasIngresos').document(s['doc_id']).set({'ingresado':total},merge=True)
+        subs.pop(0)
+    
+    return f"Ingresado actualizado"
+
 @app.get("/mensualidad")
 async def mensualidad(nombre:str = Query(), mesdemensualidad:str = Query()):
     docs = db.collection(u'alumnos').stream()
