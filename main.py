@@ -103,37 +103,33 @@ async def gastado():
 
 @app.get("/ingresado")
 async def ingresado():
-    movimientos = []
-    docs = db.collection(u'movimientos').stream()
+    today = datetime.datetime.today()
+    firstday = datetime.datetime(today.year, today.month, 1)
+    firstday = datetime.datetime(2023,2,1)
 
+    docs = db.collection('movimientos').where('fecha', '>=', firstday).stream()
+    ingresos_por_subcategoria={}
     for i in docs:
-        movimiento = {'doc_id':''}
-        movimiento['doc_id']=i.id
-        
-        for k,v in i.to_dict().items():
-            movimiento[k]=v
-        movimientos.append(movimiento)
+        if i.to_dict()['tipo'] =='Ingreso':
+            if i.to_dict()['subcategoria'] in ingresos_por_subcategoria:
+                ingresos_por_subcategoria[i.to_dict()['subcategoria']]+=i.to_dict()['monto']
+            else:
+                ingresos_por_subcategoria[i.to_dict()['subcategoria']]=i.to_dict()['monto']
 
-    subcategorias = []
-    docs = db.collection(u'subcategoriasIngresos').stream()
+    docs = db.collection('subcategoriasIngresos').stream()
 
-    for i in docs:
-        movimiento = {'doc_id':''}
-        movimiento['doc_id']=i.id
-        
-        for k,v in i.to_dict().items():
-            movimiento[k]=v
-        subcategorias.append(movimiento)
-    
-    subs=[]
-    for i in subcategorias:
-        subs.append(i['subcategoria'])
-    
-    for s in subcategorias:
-        total = sum([m['monto'] for m in movimientos if (m['tipo']=='Ingreso')and (m['subcategoria']==subs[0])])
-        db.collection('subcategoriasIngresos').document(s['doc_id']).set({'ingresado':total},merge=True)
-        subs.pop(0)
-    
+    for doc in docs:
+        if doc.to_dict()['subcategoria'] not in ingresos_por_subcategoria:
+            doc_ref = db.collection('subcategoriasIngresos').document(doc.id)
+            doc_ref.set({'monto': 0}, merge=True)
+
+
+    for k, v in ingresos_por_subcategoria.items():
+        for doc in docs:
+            if doc.to_dict()['subcategoria'] == k:
+                doc_ref = db.collection('subcategoriasIngresos').document(doc.id)
+                doc_ref.set({'monto': v}, merge=True)
+
     return f"Ingresado actualizado"
 
 @app.get("/mensualidad")
