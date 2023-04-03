@@ -93,7 +93,7 @@ async def gastado():
                 doc_ref.set({'gastado': v}, merge=True)
 
     
-    return f"Gastado actualizado"
+    return egresos_por_subcategoria
 
 @app.get("/ingresado")
 async def ingresado():
@@ -124,6 +124,10 @@ async def ingresado():
                 doc_ref.set({'ingresado': v}, merge=True)
 
     return f"Ingresado actualizado"
+
+
+
+
 
 @app.get("/mensualidad")
 async def mensualidad(nombre:str = Query(), mesdemensualidad:str = Query()):
