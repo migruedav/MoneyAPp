@@ -117,7 +117,7 @@ async def ingresado():
     for doc in docs:
         if doc.to_dict()['subcategoria'] not in ingresos_por_subcategoria:
             doc_ref = db.collection('subcategoriasIngresos').document(doc.id)
-            doc_ref.set({'ingresado': 500}, merge=True)
+            doc_ref.set({'ingresado': 0}, merge=True)
 
 
     for k, v in ingresos_por_subcategoria.items():
