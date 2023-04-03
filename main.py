@@ -60,8 +60,8 @@ async def home():
     db.collection('home').document('d7x71RhHQede3VxMuMgN').set(TotalPorCuenta)
     db.collection('home').document('d7x71RhHQede3VxMuMgN').set({'TotalIngresos':TotalIngresos,'TotalEgresos':TotalEgresos,'GranTotal':GranTotal}, merge=True)
     
-    requests.get('https://moneyapp-production.up.railway.app/gastado')
-    requests.get('https://moneyapp-production.up.railway.app/ingresado')
+    await home()
+    await gastado()
 
     return "Datos del Home actualizados"
 
