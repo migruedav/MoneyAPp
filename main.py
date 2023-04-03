@@ -8,6 +8,7 @@ import datetime
 import base64
 import json
 import os
+import requests
 
 firebase_config_base64 = os.environ.get('firebase64')
 json_data = base64.b64decode(firebase_config_base64).decode('utf-8')
@@ -60,6 +61,9 @@ async def home():
     db.collection('home').document('d7x71RhHQede3VxMuMgN').set(TotalPorCuenta)
     db.collection('home').document('d7x71RhHQede3VxMuMgN').set({'TotalIngresos':TotalIngresos,'TotalEgresos':TotalEgresos,'GranTotal':GranTotal}, merge=True)
 
+    requests.get('https://moneyapp-production.up.railway.app/gastado')
+    requests.get('https://moneyapp-production.up.railway.app/ingresado')
+    
     return "Datos del Home actualizados"
 
 
