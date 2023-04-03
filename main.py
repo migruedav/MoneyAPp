@@ -67,7 +67,6 @@ async def home():
 async def gastado():
     today = datetime.datetime.today()
     firstday = datetime.datetime(today.year, today.month, 1)
-    firstday = datetime.datetime(2023,2,1)
     
     docs = db.collection('movimientos').where('fecha', '>=', firstday).stream()
     egresos_por_subcategoria={}
@@ -87,7 +86,7 @@ async def gastado():
             doc_ref.set({'gastado': 0}, merge=True)
 
     docs = db.collection('subcategoriasEgresos').stream()
-    
+
     for k, v in egresos_por_subcategoria.items():
         for doc in docs:
             if doc.to_dict()['subcategoria'] == k:
