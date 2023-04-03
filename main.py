@@ -68,6 +68,7 @@ async def gastado():
     today = datetime.datetime.today()
     firstday = datetime.datetime(today.year, today.month, 1)
     firstday = datetime.datetime(2023,2,1)
+    
     docs = db.collection('movimientos').where('fecha', '>=', firstday).stream()
     egresos_por_subcategoria={}
     for i in docs:
@@ -76,32 +77,21 @@ async def gastado():
                 egresos_por_subcategoria[i.to_dict()['subcategoria']]+=i.to_dict()['monto']
             else:
                 egresos_por_subcategoria[i.to_dict()['subcategoria']]=i.to_dict()['monto']
+
+
     docs = db.collection('subcategoriasEgresos').stream()
+
     for doc in docs:
         if doc.to_dict()['subcategoria'] not in egresos_por_subcategoria:
             doc_ref = db.collection('subcategoriasEgresos').document(doc.id)
             doc_ref.set({'gastado': 0}, merge=True)
+
     for k, v in egresos_por_subcategoria.items():
         for doc in docs:
             if doc.to_dict()['subcategoria'] == k:
                 doc_ref = db.collection('subcategoriasEgresos').document(doc.id)
                 doc_ref.set({'gastado': v}, merge=True)
 
-
-    docs = db.collection('subcategoriasEgresos').stream()
-    for doc in docs:
-        print(doc.to_dict())
-        if doc.to_dict()['subcategoria'] not in egresos_por_subcategoria:
-            doc_ref = db.collection('subcategoriasEgresos').document(doc.id)
-            doc_ref.set({'gastado': 0}, merge=True)
-
-
-
-    for k, v in egresos_por_subcategoria.items():
-        for doc in docs:
-            if doc.to_dict()['subcategoria'] == k:
-                doc_ref = db.collection('subcategoriasEgresos').document(doc.id)
-                doc_ref.set({'monto': v}, merge=True)
     
     return f"Gastado actualizado"
 
