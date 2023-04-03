@@ -102,7 +102,6 @@ async def gastado():
 async def ingresado():
     today = datetime.datetime.today()
     firstday = datetime.datetime(today.year, today.month, 1)
-    firstday = datetime.datetime(2023,2,1)
 
     docs = db.collection('movimientos').where('fecha', '>=', firstday).stream()
     ingresos_por_subcategoria={}
