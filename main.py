@@ -34,7 +34,6 @@ class Msg(BaseModel):
 async def root():
     return "FastAPI MoneyApp"
 
-
 @app.get("/home")
 async def home():
     movimientos = []
@@ -61,11 +60,10 @@ async def home():
     db.collection('home').document('d7x71RhHQede3VxMuMgN').set(TotalPorCuenta)
     db.collection('home').document('d7x71RhHQede3VxMuMgN').set({'TotalIngresos':TotalIngresos,'TotalEgresos':TotalEgresos,'GranTotal':GranTotal}, merge=True)
     
-    gastado()
-    ingresado()
+    requests.get('https://moneyapp-production.up.railway.app/gastado')
+    requests.get('https://moneyapp-production.up.railway.app/ingresado')
 
     return "Datos del Home actualizados"
-
 
 @app.get("/gastado")
 async def gastado():
@@ -130,10 +128,6 @@ async def ingresado():
                 doc_ref.set({'ingresado': v}, merge=True)
 
     return f"Ingresado actualizado"
-
-
-
-
 
 @app.get("/mensualidad")
 async def mensualidad(nombre:str = Query(), mesdemensualidad:str = Query()):
