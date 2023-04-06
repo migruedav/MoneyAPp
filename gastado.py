@@ -33,8 +33,7 @@ def gastado():
     for i in docs:
         if i.to_dict()['tipo'] == 'Egreso':
             if i.to_dict()['subcategoria'] in egresos_por_subcategoria:
-                egresos_por_subcategoria[i.to_dict(
-                )['subcategoria']] += i.to_dict()['gastado']
+                egresos_por_subcategoria[i.to_dict()['subcategoria']] += i.to_dict()['monto']
             else:
                 egresos_por_subcategoria[i.to_dict()['subcategoria']] = i.to_dict()[
                     'monto']
@@ -51,8 +50,7 @@ def gastado():
     for k, v in egresos_por_subcategoria.items():
         for doc in docs:
             if doc.to_dict()['subcategoria'] == k:
-                doc_ref = db.collection(
-                    'subcategoriasEgresos').document(doc.id)
+                doc_ref = db.collection('subcategoriasEgresos').document(doc.id)
                 doc_ref.set({'gastado': v}, merge=True)
 
     return egresos_por_subcategoria
