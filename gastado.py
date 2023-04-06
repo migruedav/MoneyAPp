@@ -45,10 +45,8 @@ def gastado():
             doc_ref = db.collection('subcategoriasEgresos').document(doc.id)
             doc_ref.set({'gastado': 0}, merge=True)
 
-    docs = db.collection('subcategoriasEgresos').stream()
-
     for k, v in egresos_por_subcategoria.items():
-        for doc in docs:
+        for doc in db.collection('subcategoriasEgresos').stream():
             if doc.to_dict()['subcategoria'] == k:
                 doc_ref = db.collection('subcategoriasEgresos').document(doc.id)
                 doc_ref.set({'gastado': v}, merge=True)
