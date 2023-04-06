@@ -34,7 +34,7 @@ def gastado():
         if i.to_dict()['tipo'] == 'Egreso':
             if i.to_dict()['subcategoria'] in egresos_por_subcategoria:
                 egresos_por_subcategoria[i.to_dict(
-                )['subcategoria']] += i.to_dict()['monto']
+                )['subcategoria']] += i.to_dict()['gastado']
             else:
                 egresos_por_subcategoria[i.to_dict()['subcategoria']] = i.to_dict()[
                     'monto']
