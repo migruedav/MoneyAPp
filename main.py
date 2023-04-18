@@ -93,9 +93,9 @@ async def ingresado():
             doc_ref.set({'ingresado': 0}, merge=True)
 
     docs = db.collection('subcategoriasIngresos').stream()
-
-    for k, v in ingresos_por_subcategoria.items():
-        for doc in docs:
+    
+    for doc in docs:
+        for k, v in ingresos_por_subcategoria.items():
             if doc.to_dict()['subcategoria'] == k:
                 doc_ref = db.collection('subcategoriasIngresos').document(doc.id)
                 doc_ref.set({'ingresado': v}, merge=True)
