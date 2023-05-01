@@ -26,7 +26,8 @@ db = firestore.client()
 def gastado():
 
     today = datetime.datetime.today()
-    firstday = datetime.datetime(today.year, today.month, 1)
+    #firstday = datetime.datetime(today.year, today.month, 1)
+    firstday = datetime.datetime(today.year, 3, 1)
 
     docs = db.collection('movimientos').where('fecha', '>=', firstday).stream()
     egresos_por_subcategoria = {}

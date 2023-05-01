@@ -74,7 +74,8 @@ async def get_gastado():
 @app.get("/ingresado")
 async def ingresado():
     today = datetime.datetime.today()
-    firstday = datetime.datetime(today.year, today.month, 1)
+    #firstday = datetime.datetime(today.year, today.month, 1)
+    firstday = datetime.datetime(today.year, 3, 1)
 
     docs = db.collection('movimientos').where('fecha', '>=', firstday).stream()
     ingresos_por_subcategoria={}
